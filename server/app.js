@@ -2,6 +2,8 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const Cohort = require("./models/Cohort.model");
 const PORT = 5005;
 
 // STATIC DATA
@@ -35,12 +37,26 @@ app.get("/docs", (req, res) => {
 });
 
 app.get("/api/cohorts", (req, res, next) => {
-  res.json(cohorts);
+  // res.json(cohorts);
+  Cohort.find({})
+    .then((cohorts) => {
+      console.log("Retrieved cohorts ->", cohorts);
+      res.json(cohorts);
+    })
+    .catch((error) => {
+      console.log("Error while retrieving cohorts ->", error);
+    });
 });
 
 app.get("/api/students", (req, res, next) => {
   res.json(students);
 });
+
+//Mongoose connection
+mongoose
+  .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
+  .then((x) => console.log(`Connected to Database: "${x.connections[0].name}"`))
+  .catch((error) => console.error("Error connecting to MongoDB", error));
 
 // START SERVER
 app.listen(PORT, () => {
