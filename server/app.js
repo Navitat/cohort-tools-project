@@ -152,6 +152,35 @@ app.get("/api/students/cohort/:cohortId", (req, res) => {
     });
 });
 
+app.get("/api/students/:studentId", (req, res) => {
+  const { studentId } = req.params;
+
+  Student.findById(studentId)
+    .populate("cohort")
+    .then((student) => {
+      res.status(200).json(student);
+    })
+    .catch((error) => {
+      console.log("Error retrieving student");
+      console.log(error);
+      res.status(500).json({ error: "Failed to retrieve student" });
+    });
+});
+
+app.post("/api/students", (req, res) => {
+  const newStudent = req.body;
+
+  Student.create(newStudent)
+    .then((student) => {
+      res.status(201).json(student);
+    })
+    .catch((error) => {
+      console.log("Error creating student");
+      console.log(error);
+      res.status(500).json({ error: "Failed to create student" });
+    });
+});
+
 //Mongoose connection
 mongoose
   .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
