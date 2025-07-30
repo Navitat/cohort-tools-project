@@ -199,6 +199,20 @@ app.put("/api/students/:studentId", (req, res) => {
     });
 });
 
+app.delete("/api/students/:studentId", (req, res) => {
+  const { studentId } = req.params;
+
+  Student.findByIdAndDelete(studentId)
+    .then((student) => {
+      res.status(204).json(student);
+    })
+    .catch((error) => {
+      console.log("Error deleting student");
+      console.log(error);
+      res.status(500).json({ error: "Failed to delete student" });
+    });
+});
+
 //Mongoose connection
 mongoose
   .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
