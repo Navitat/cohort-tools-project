@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
-const { Schema, Types } = mongoose;
+const Schema = mongoose.Schema;
+// const { Schema, Types } = mongoose;
 
 // Create Schema
 const studentSchema = new Schema({
@@ -27,7 +27,7 @@ const studentSchema = new Schema({
   },
   background: { type: String, default: "" },
   image: { type: String, default: "https://i.imgur.com/r8bo8u7.png" },
-  cohort: Types.ObjectId,
+  cohort: { type: mongoose.Schema.Types.ObjectId },
   projects: Array,
 });
 
