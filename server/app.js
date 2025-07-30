@@ -181,6 +181,24 @@ app.post("/api/students", (req, res) => {
     });
 });
 
+app.put("/api/students/:studentId", (req, res) => {
+  const { studentId } = req.params;
+  const newDetails = req.body;
+
+  Student.findByIdAndUpdate(studentId, newDetails, {
+    new: true,
+    runValidators: true,
+  })
+    .then((student) => {
+      res.status(200).json(student);
+    })
+    .catch((error) => {
+      console.log("Error updating student");
+      console.log(error);
+      res.status(500).json({ error: "Failed to update student" });
+    });
+});
+
 //Mongoose connection
 mongoose
   .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
