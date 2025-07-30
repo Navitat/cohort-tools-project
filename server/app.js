@@ -37,6 +37,10 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
+//
+// COHORT ROUTES
+//
+
 app.get("/api/cohorts", (req, res, next) => {
   // res.json(cohorts);
   Cohort.find({})
@@ -49,6 +53,57 @@ app.get("/api/cohorts", (req, res, next) => {
       res.status(500).json({ error: "Failed to retrieve cohorts" });
     });
 });
+
+app.get("/api/cohorts/:cohortId", (req, res) => {
+  const { cohortId } = req.params;
+
+  Cohort.findById(cohortId)
+    .then((cohort) => {
+      res.status(200).json(cohort);
+    })
+    .catch((error) => {
+      console.log("Error retrieving cohort");
+      console.log(error);
+      res.status(500).json({ error: "Failed retrieving specific Cohort" });
+    });
+});
+
+app.post("/api/cohorts", (req, res) => {
+  const newCohort = req.body;
+
+  Cohort.create(newCohort)
+    .then((cohort) => {
+      res.status(201).json(cohort);
+    })
+    .catch((error) => {
+      console.log("Error creating cohort");
+      console.log(error);
+      res.status(500).json({ error: "Failed to create cohort" });
+    });
+});
+
+app.put("/api/cohorts/:cohortId", (req, res) => {
+  const { cohortId } = req.params;
+
+  const newDetails = req.body;
+
+  Cohort.findByIdAndUpdate(cohortId, newDetails, {
+    new: true,
+    runValidators: true,
+  })
+    .then((cohort) => {
+      res.status(200).json(cohort);
+    })
+    .catch((error) => {
+      console.log("Error updating cohort");
+      console.log(error);
+      res.status(500).json({ error: "Failed to update cohort" });
+    });
+});
+
+//
+// STUDENT ROUTES
+//
 
 app.get("/api/students", (req, res, next) => {
   // res.json(students);
