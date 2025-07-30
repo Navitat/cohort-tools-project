@@ -101,6 +101,20 @@ app.put("/api/cohorts/:cohortId", (req, res) => {
     });
 });
 
+app.delete("/api/cohorts/:cohortId", (req, res) => {
+  const { cohortId } = req.params;
+
+  Cohort.findByIdAndDelete(cohortId)
+    .then((cohort) => {
+      res.status(204).json(cohort);
+    })
+    .catch((error) => {
+      console.log("Error deleting cohort");
+      console.log(error);
+      res.status(500).json({ error: "Failed to delete cohort" });
+    });
+});
+
 //
 // STUDENT ROUTES
 //
