@@ -122,6 +122,7 @@ app.delete("/api/cohorts/:cohortId", (req, res) => {
 app.get("/api/students", (req, res, next) => {
   // res.json(students);
   Student.find({})
+    .populate("cohort")
     .then((students) => {
       console.log("Retrieved students ->", students);
       res.json(students);
@@ -129,6 +130,25 @@ app.get("/api/students", (req, res, next) => {
     .catch((error) => {
       console.error("Error while retrieving students ->", error);
       res.status(500).json({ error: "Failed to retrieve students" });
+    });
+});
+
+app.get("/api/students/cohort/:cohortId", (req, res) => {
+  const { cohortId } = req.params;
+
+  let filter = { cohort: cohortId };
+
+  Student.find(filter)
+    .populate("cohort")
+    .then((students) => {
+      res.status(200).json(students);
+    })
+    .catch((error) => {
+      console.log("Error retrieving students from specific cohort");
+      console.log(error);
+      res
+        .status(500)
+        .json({ error: "Failed to retrieve students from specific cohort" });
     });
 });
 
