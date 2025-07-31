@@ -30,6 +30,12 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+//Mongoose connection
+mongoose
+  .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
+  .then((x) => console.log(`Connected to Database: "${x.connections[0].name}"`))
+  .catch((error) => console.error("Error connecting to MongoDB", error));
+
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
 // ...
@@ -212,12 +218,6 @@ app.delete("/api/students/:studentId", (req, res) => {
       res.status(500).json({ error: "Failed to delete student" });
     });
 });
-
-//Mongoose connection
-mongoose
-  .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
-  .then((x) => console.log(`Connected to Database: "${x.connections[0].name}"`))
-  .catch((error) => console.error("Error connecting to MongoDB", error));
 
 // START SERVER
 app.listen(PORT, () => {
