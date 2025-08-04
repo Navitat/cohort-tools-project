@@ -110,4 +110,11 @@ router.post("/login", (req, res, next) => {
     });
 });
 
+// GET /auth/verify -- verify jwt
+router.get("/verify", isAuthenticated, (req, res, next) => {
+  console.log(`req.payload`, req.payload);
+
+  res.json(req.payload);
+});
+
 module.exports = router;
