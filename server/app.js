@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require("dotenv/config");
 const mongoose = require("mongoose");
 const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
@@ -206,6 +207,9 @@ app.delete("/api/students/:studentId", (req, res, next) => {
       next(error);
     });
 });
+
+//AUTH ROUTES
+app.use("/auth", require("./routes/auth.routes"));
 
 const {
   errorHandler,
