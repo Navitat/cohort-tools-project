@@ -6,6 +6,7 @@ require("dotenv/config");
 const mongoose = require("mongoose");
 const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
+const User = require("./models/User.model");
 const PORT = 5005;
 
 // STATIC DATA
@@ -13,6 +14,8 @@ const PORT = 5005;
 // ...
 const cohorts = require("./cohorts.json");
 const students = require("./students.json");
+
+const { isAuthenticated } = require("./middleware/jwt.middleware");
 
 // INITIALIZE EXPRESS APP - https://expressjs.com/en/4x/api.html#express
 const app = express();
@@ -210,6 +213,25 @@ app.delete("/api/students/:studentId", (req, res, next) => {
 
 //AUTH ROUTES
 app.use("/auth", require("./routes/auth.routes"));
+
+// USER ROUTE
+app.get("/api/users/:userId", isAuthenticated, (req, res, next) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  User.findById(userId)
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => {
+      console.log("Error while retrieving the user.");
+      next(error);
+    });
+});
 
 const {
   errorHandler,
